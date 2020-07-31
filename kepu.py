@@ -105,7 +105,7 @@ if __name__ == '__main__':
         data = getVideoInfo(url=url, params=querystring, uas=uas)
         if data is None:
             continue
-        elif data:
+        elif not data:
             break
         for item in data:
             parseData(item)
