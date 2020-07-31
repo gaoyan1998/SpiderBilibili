@@ -9,6 +9,7 @@ from Logger import ErrorLog, DataLog, Logger
 
 errLog = log = Logger('./log/error.log')
 dataLog = log = Logger('./log/data.log')
+progress = log = Logger('./log/progress.log')
 
 
 # 加载User_Agent函数
@@ -104,10 +105,12 @@ if __name__ == '__main__':
         data = getVideoInfo(url=url, params=querystring, uas=uas)
         if data is None:
             continue
+        elif data:
+            break
         for item in data:
             parseData(item)
         pn += 1
-
+    progress.logger.info("科普完成")
 #
 # headers = {
 #     'referer': "http://www.bilibili.com/",
