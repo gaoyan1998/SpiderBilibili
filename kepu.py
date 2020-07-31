@@ -65,7 +65,7 @@ def parseData(data):
     # 1. 创建文件对象
     f = open('kepu.csv', 'a', encoding='utf-8')
     # 2. 基于文件对象构建 csv写入对象
-    csv_writer = csv.writer(f)
+    csv_writer = csv.writer(f,delimiter='|')
     # 3. 构建列表头
     # csv_writer.writerow(["aid", "attribute", "bvid", "cid", "ctime", "desc", "mid", "name", "pubdate", "pic"
     #                      , "coin", "danmaku", "favorite", "like", "reply", "share", "view", "title", "tname"])
