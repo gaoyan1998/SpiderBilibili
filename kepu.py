@@ -53,7 +53,7 @@ def getVideoInfo(url, params, uas):
             data = response['data']['archives']
             return data
         except Exception as e:
-            errStr = "出错url：" + url + params +"\n"
+            errStr = "出错url：" + url + str(params) +"\n"
             errLog.logger.error(errStr)
             errLog.logger.error(e)
             i += 1
