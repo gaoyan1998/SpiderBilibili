@@ -1,10 +1,11 @@
 import random
+import time
 
 import requests
 import sys, getopt
 # 导入CSV安装包
 import csv
-
+import json
 from Logger import ErrorLog, DataLog, Logger
 
 errLog = log = Logger('./log/error.log')
@@ -28,15 +29,17 @@ def LoadUserAgent(uafile):
 
 
 # 加载ip函数
-def LoadIP(ipfile):
-    uas = []
-    with open(ipfile, 'rb') as uaf:
-        for ua in uaf.readlines():
-            if ua:
-                uas.append(ua.strip()[0:])
-    random.shuffle(uas)
-    return uas
-
+def LoadIP():
+    # uas = []
+    # with open(ipfile, 'rb') as uaf:
+    #     for ua in uaf.readlines():
+    #         if ua:
+    #             uas.append(ua.strip()[0:])
+    # random.shuffle(uas)
+    api = "http://route.xiongmaodaili.com/xiongmao-web/api/glip?secret=2a98d88af88a330c3547f2cc837d311e&orderNo=GL20200801233905Z1p6U3a2&count=1&isTxt=1&proxyType=1"
+    response = requests.get(api)
+    return response.text
+    # return "125.119.67.233:43897"
 
 def getVideoInfo(url, params, uas, ips):
     # 随机选择user_agent
@@ -62,20 +65,23 @@ def getVideoInfo(url, params, uas, ips):
     }
     # 通过requests.get来请求数据，再通过json()解析
     i = 0
-    while i < 5:
+    while i < 3:
         try:
-            ip = random.choice(ips)
-            proxy = {"https": "https://" + ip}
-            response = requests.get(url, params=params, headers=headers, proxies=proxy, verify=False,
-                                    allow_redirects=False).json()
+            proxy = {"https": "https://" + ips}
+            response = requests.get(url, params=params, headers=headers,proxies=proxy, verify=False,
+                                    allow_redirects=False)
             if response.status_code is not 200:
-                print(response)
+                if response.status_code == 412:
+                    time.sleep(100)
+                dataLog.logger.info("访问出错"+response.text)
                 continue
-            dataLog.logger.info(response)
-            dataLog.logger.debug(ip + params)
-            data = response['data']['archives']
+            dataLog.logger.debug(response.text)
+            dataLog.logger.info(params)
+            jsdata = json.loads(response.text)
+            data = jsdata['data']['archives']
             return data
         except Exception as e:
+            ips = LoadIP()
             errStr = "出错url：" + url + str(params) + "\n"
             errLog.logger.error(errStr)
             errLog.logger.error(e)
@@ -144,7 +150,7 @@ if __name__ == '__main__':
     print(rid, page, outputfile)
     # 加载user_agents.txt文件
     uas = LoadUserAgent("user_agent")
-    ips = LoadIP("goodip.txtbak")
+    ips = LoadIP()
     url = "https://api.bilibili.com/x/web-interface/newlist"
     while (True):
         querystring = {"rid": rid, "type": "0", "pn": page, "ps": "50", "jsonp": "jsonp"}
@@ -152,6 +158,8 @@ if __name__ == '__main__':
         if data is None:
             continue
         elif not data:
+            break
+        elif page > 10000:
             break
         for item in data:
             parseData(item)

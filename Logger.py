@@ -1,7 +1,7 @@
 import logging
 from logging import handlers
 
-LogLevel = "debug"
+LogLevel = "info"
 
 class Logger(object):
     level_relations = {
