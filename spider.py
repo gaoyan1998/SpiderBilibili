@@ -72,6 +72,7 @@ def getVideoInfo(url, params, uas,ips):
             # response = requests.get(url, params=params, headers=headers, proxies=proxy, verify=False,
             #                         allow_redirects=False).json()
             dataLog.logger.info(response)
+            dataLog.logger.debug(ip+params)
             data = response['data']['archives']
             return data
         except Exception as e:
