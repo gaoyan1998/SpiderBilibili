@@ -38,7 +38,7 @@ class ErrorLog:
         return self.log
 
 class DataLog:
-    log = Logger('./log/data.log')
+    log = Logger('log/data.log')
     def getLog(self):
         return self.log
 

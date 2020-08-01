@@ -33,7 +33,7 @@ def LoadIP(ipfile):
     with open(ipfile, 'rb') as uaf:
         for ua in uaf.readlines():
             if ua:
-                uas.append(ua.strip()[1:-1])
+                uas.append(ua.strip()[0:])
     random.shuffle(uas)
     return uas
 
@@ -62,16 +62,15 @@ def getVideoInfo(url, params, uas, ips):
     }
     # 通过requests.get来请求数据，再通过json()解析
     i = 0
-    while i < 4:
+    while i < 5:
         try:
             ip = random.choice(ips)
-            session.proxies = {"http": "http://" + ip, "https": "https://" + ip}
-            session.params = params
-            session.verify = False
-            session.headers = headers
-            response = session.get(url, allow_redirects=False).json()
-            # response = requests.get(url, params=params, headers=headers, proxies=proxy, verify=False,
-            #                         allow_redirects=False).json()
+            proxy = {"https": "https://" + ip}
+            response = requests.get(url, params=params, headers=headers, proxies=proxy, verify=False,
+                                    allow_redirects=False).json()
+            if response.status_code is not 200:
+                print(response)
+                continue
             dataLog.logger.info(response)
             dataLog.logger.debug(ip + params)
             data = response['data']['archives']
@@ -145,7 +144,7 @@ if __name__ == '__main__':
     print(rid, page, outputfile)
     # 加载user_agents.txt文件
     uas = LoadUserAgent("user_agent")
-    ips = LoadUserAgent("goodip.txt")
+    ips = LoadIP("goodip.txtbak")
     url = "https://api.bilibili.com/x/web-interface/newlist"
     while (True):
         querystring = {"rid": rid, "type": "0", "pn": page, "ps": "50", "jsonp": "jsonp"}

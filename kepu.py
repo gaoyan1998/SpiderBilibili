@@ -1,16 +1,18 @@
 import random
 
 import requests
-import json
+import sys,getopt
 # 导入CSV安装包
 import csv
 
 from Logger import ErrorLog, DataLog, Logger
 
 errLog = log = Logger('./log/error.log')
-dataLog = log = Logger('./log/data.log')
+dataLog = log = Logger('log/data.json')
 progress = log = Logger('./log/progress.log')
-
+rid = None
+page = "1"
+outputfile = "defaultSpider.csv"
 
 # 加载User_Agent函数
 def LoadUserAgent(uafile):
@@ -63,7 +65,7 @@ def getVideoInfo(url, params, uas):
 
 def parseData(data):
     # 1. 创建文件对象
-    f = open('kepu.csv', 'a', encoding='utf-8')
+    f = open(outputfile, 'a', encoding='utf-8')
     # 2. 基于文件对象构建 csv写入对象
     csv_writer = csv.writer(f,delimiter='|')
     # 3. 构建列表头
@@ -94,14 +96,34 @@ def parseData(data):
     # 5. 关闭文件
     f.close()
 
+def initConfig(argv):
+    global rid,outputfile,page
+    try:
+        opts, args = getopt.getopt(argv, "i:p:o:", ["outputfile="])
+    except getopt.GetoptError:
+        print('spider.py -i <rid> -p <page> -o <outputfile>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('spider.py -i <rid> -p <page> -o <outputfile>')
+            sys.exit()
+        elif opt == "-i":
+            rid = arg
+        elif opt in ("-o", "--outputfile"):
+            outputfile = arg
+    if rid is None:
+        print('-i rid is must!!')
+        sys.exit(2)
 
 if __name__ == '__main__':
+    initConfig(sys.argv[1:])
+    print(rid,page,outputfile)
+    sys.exit(2)
     # 加载user_agents.txt文件
     uas = LoadUserAgent("user_agent")
     url = "https://api.bilibili.com/x/web-interface/newlist"
-    pn = 1
     while (True):
-        querystring = {"rid": "201", "type": "0", "pn": pn, "ps": "50", "jsonp": "jsonp"}
+        querystring = {"rid": rid, "type": "0", "pn": page, "ps": "50", "jsonp": "jsonp"}
         data = getVideoInfo(url=url, params=querystring, uas=uas)
         if data is None:
             continue
@@ -109,7 +131,7 @@ if __name__ == '__main__':
             break
         for item in data:
             parseData(item)
-        pn += 1
+        page += 1
     progress.logger.info("科普完成")
 #
 # headers = {
