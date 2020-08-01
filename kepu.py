@@ -69,25 +69,25 @@ def parseData(data):
     # 3. 构建列表头
     # csv_writer.writerow(["aid", "attribute", "bvid", "cid", "ctime", "desc", "mid", "name", "pubdate", "pic"
     #                      , "coin", "danmaku", "favorite", "like", "reply", "share", "view", "title", "tname"])
-    aid = data['aid']
-    attribute = data['attribute']
-    bvid = data['bvid']
-    cid = data['cid']
-    ctime = data['ctime']
-    desc = data['desc']
-    mid = data['owner']['mid']
-    name = data['owner']['name']
-    pubdate = data['pubdate']
-    pic = data['pic']
-    coin = data['stat']['coin']
-    danmaku = data['stat']['danmaku']
-    favorite = data['stat']['favorite']
-    like = data['stat']['like']
-    reply = data['stat']['reply']
-    share = data['stat']['share']
-    view = data['stat']['view']
-    title = data['title']
-    tname = data['tname']
+    aid = data.get('aid',default="None")
+    attribute = data.get('attribute',default="None")
+    bvid = data.get('bvid',default="None")
+    cid = data.get('cid',default="None")
+    ctime = data.get('ctime',default="None")
+    desc = data.get('desc',default="None")
+    mid = data.get('owner',default={}).get('mid',default="None")
+    name = data.get('owner',default={}).get('name',default="None")
+    pubdate = data.get('pubdate',default="None")
+    pic = data.get('pic',default="None")
+    coin = data.get('stat',default={}).get('coin',default="None")
+    danmaku = data.get('stat',default={}).get('danmaku',default="None")
+    favorite = data.get('stat',default={}).get('favorite',default="None")
+    like = data.get('stat',default={}).get('like',default="None")
+    reply = data.get('stat',default={}).get('reply',default="None")
+    share = data.get('stat',default={}).get('share',default="None")
+    view = data.get('stat',default={}).get('view',default="None")
+    title = data.get('title',default="None")
+    tname = data.get('tname',default="None")
     # 4. 写入csv文件内容
     csv_writer.writerow([aid, attribute, bvid, cid, ctime, desc, mid, name, pubdate, pic
                             , coin, danmaku, favorite, like, reply, share, view, title, tname])
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     # 加载user_agents.txt文件
     uas = LoadUserAgent("user_agent")
     url = "https://api.bilibili.com/x/web-interface/newlist"
-    pn = 1
+    pn = 4025
     while (True):
         querystring = {"rid": "201", "type": "0", "pn": pn, "ps": "50", "jsonp": "jsonp"}
         data = getVideoInfo(url=url, params=querystring, uas=uas)
