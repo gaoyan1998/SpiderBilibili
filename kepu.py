@@ -99,7 +99,7 @@ if __name__ == '__main__':
     # 加载user_agents.txt文件
     uas = LoadUserAgent("user_agent")
     url = "https://api.bilibili.com/x/web-interface/newlist"
-    pn = 4025
+    pn = 1
     while (True):
         querystring = {"rid": "201", "type": "0", "pn": pn, "ps": "50", "jsonp": "jsonp"}
         data = getVideoInfo(url=url, params=querystring, uas=uas)
