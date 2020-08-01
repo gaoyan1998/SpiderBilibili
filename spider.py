@@ -65,7 +65,7 @@ def getVideoInfo(url, params, uas,ips):
     i = 0
     while i < 4:
         try:
-            session.proxies= {"https:"+ip}
+            session.proxies= {"http:"+ip}
             session.params=params
             session.headers=headers
             response = session.get(url).json()
