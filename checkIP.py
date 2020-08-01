@@ -13,5 +13,5 @@ for ip in uas:
     code = r.status_code
     print(ip+"---->"+str(code))
     if code == 200:
-        with open("goodip.txt1", 'a') as goodip:
+        with open("goodip.txt", 'a') as goodip:
             goodip.write(ip+"\n")
