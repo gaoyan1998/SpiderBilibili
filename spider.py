@@ -38,10 +38,9 @@ def LoadIP(ipfile):
     return uas
 
 
-def getVideoInfo(url, params, uas,ips):
+def getVideoInfo(url, params, uas, ips):
     # 随机选择user_agent
     ua = random.choice(uas)
-    ip = random.choice(ips)
 
     # 蘑菇代理的隧道订单
     # appKey = "TndmVERKdldyQjRIcnhqaTpBN3BHS1VVNDBMT2FCbUYy"
@@ -65,14 +64,16 @@ def getVideoInfo(url, params, uas,ips):
     i = 0
     while i < 4:
         try:
-            session.proxies= {"http:"+ip}
-            session.params=params
-            session.headers=headers
-            response = session.get(url).json()
+            ip = random.choice(ips)
+            session.proxies = {"http": "http://" + ip, "https": "https://" + ip}
+            session.params = params
+            session.verify = False
+            session.headers = headers
+            response = session.get(url, allow_redirects=False).json()
             # response = requests.get(url, params=params, headers=headers, proxies=proxy, verify=False,
             #                         allow_redirects=False).json()
             dataLog.logger.info(response)
-            dataLog.logger.debug(ip+params)
+            dataLog.logger.debug(ip + params)
             data = response['data']['archives']
             return data
         except Exception as e:
