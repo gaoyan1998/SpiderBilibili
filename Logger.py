@@ -31,26 +31,26 @@ class Logger(object):
         if not self.logger.handlers:
             self.logger.addHandler(sh) #把对象加到logger里
             self.logger.addHandler(th)
-
-class ErrorLog:
-    log = Logger('./log/error.log')
-    def getLog(self):
-        return self.log
-
-class DataLog:
-    log = Logger('log/data.log')
-    def getLog(self):
-        return self.log
-
-class DBLog:
-    log = Logger('./log/db.log')
-    def getLog(self):
-        return self.log
-if __name__ == '__main__':
-    log = Logger('./log/all.log',level='debug')
-    log.logger.debug('debug')
-    log.logger.info('info')
-    log.logger.warning('警告')
-    log.logger.error('报错')
-    log.logger.critical('严重')
-    Logger('./log/testerror.log', level='error').logger.error('error')
+#
+# class ErrorLog:
+#     log = Logger('./log/error.log')
+#     def getLog(self):
+#         return self.log
+#
+# class DataLog:
+#     log = Logger('log/data.log')
+#     def getLog(self):
+#         return self.log
+#
+# class DBLog:
+#     log = Logger('./log/db.log')
+#     def getLog(self):
+#         return self.log
+# if __name__ == '__main__':
+    # log = Logger('./log/all.log',level='debug')
+    # log.logger.debug('debug')
+    # log.logger.info('info')
+    # log.logger.warning('警告')
+    # log.logger.error('报错')
+    # log.logger.critical('严重')
+    # Logger('./log/testerror.log', level='error').logger.error('error')
